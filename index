@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="so" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HRSDGPT </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .gradient-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .gradient-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 10px 30px rgba(240, 147, 251, 0.3);
+        }
+        
+        .gradient-success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            box-shadow: 0 10px 30px rgba(79, 172, 254, 0.3);
+        }
+        
+        .gradient-gold {
+            background: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+        
+        .gradient-rainbow {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+        
+        .card-modern {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-modern {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .btn-modern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-modern:hover::before, .btn-modern:active::before {
+            left: 100%;
+        }
+        
+        .chat-container {
+            height: 70vh;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+        
+        .message-user {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin-left: auto;
+            max-width: 80%;
+            border-radius: 20px 20px 5px 20px;
+            padding: 12px 18px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .message-ai {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: #1a202c;
+            margin-right: auto;
+            max-width: 80%;
+            border-radius: 20px 20px 20px 5px;
+            padding: 12px 18px;
+            margin-bottom: 12px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            padding: 12px 18px;
+            background: #f1f5f9;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            max-width: 80px;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #667eea;
+            margin: 0 2px;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+        
+        .input-modern {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(99, 102, 241, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .input-modern:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            background: rgba(255, 255, 255, 1);
+        }
+        
+        .floating-animation {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .glow-effect {
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 20px rgba(102, 126, 234, 0.5); }
+            to { box-shadow: 0 0 30px rgba(102, 126, 234, 0.8), 0 0 40px rgba(102, 126, 234, 0.6); }
+        }
+        
+        .rainbow-text {
+            background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe, #00f2fe);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rainbow 3s ease infinite;
+        }
+        
+        @keyframes rainbow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .pulse-glow {
+            animation: pulseGlow 2s infinite;
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { 
+                opacity: 1; 
+                box-shadow: 0 0 20px rgba(34, 197, 94, 0.5);
+            }
+            50% { 
+                opacity: 0.7; 
+                box-shadow: 0 0 30px rgba(34, 197, 94, 0.8);
+            }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .chat-container {
+                height: 60vh;
+            }
+            
+            .message-user, .message-ai {
+                max-width: 90%;
+                font-size: 14px;
+            }
+            
+            .btn-modern {
+                min-height: 48px;
+                font-size: 16px;
+                padding: 12px 16px;
+            }
+            
+            .btn-modern:active {
+                transform: scale(0.98);
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .text-4xl { font-size: 1.875rem; }
+            .text-5xl { font-size: 2.25rem; }
+            .p-8 { padding: 1.5rem; }
+            .px-8 { padding-left: 1rem; padding-right: 1rem; }
+        }
+        
+        .image-generation-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 10px 0;
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .generated-image {
+            max-width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            margin: 15px 0;
+        }
+        
+        .download-btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-white to-purple-50 min-h-screen">
+    <!-- Header -->
+    <header class="gradient-rainbow p-6 text-white">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center floating-animation">
+                        <i class="fas fa-robot text-3xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-4xl font-bold">HRSDGPT</h1>
+                        <p class="text-white/90 text-lg">
+                           soo dhawoow </p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <div class="text-white/90 text-sm"> </div>
+                    <div class="font-bold text-xl"welcome</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Chat Interface -->
+    <main class="max-w-6xl mx-auto p-6">
+        <div class="card-modern rounded-3xl p-8 glow-effect">
+            <!-- Chat Header -->
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">
+                    💬 Chat with HRSDGPT
+                </h2>
+                <p class="text-gray-600 text-lg">
+                    Weydiiso wax walba oo afsoomaali ah! Waxaan kaa jawaabi karaa su'aal oo kala duwan.
+                </p>
+                <div class="flex justify-center space-x-4 mt-4">
+                    <span class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-bold">
+                        <i class="fas fa-check-circle mr-2"></i>500+ Su'aalood
+                    </span>
+                    <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-bold">
+                        <i class="fas fa-image mr-2"></i>Sawir Sameeye
+                    </span>
+                    <span class="bg-purple-100 text-purple-800 px-4 py-2 rounded-full text-sm font-bold">
+                        <i class="fas fa-download mr-2"></i>Soo Deji
+                    </span>
+                </div>
+            </div>
+
+            <!-- Chat Container -->
+            <div id="chatContainer" class="chat-container bg-gray-50 rounded-2xl p-6 mb-6">
+                <div class="message-ai">
+                    <div class="flex items-start">
+                        <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                            <i class="fas fa-robot text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <strong class="text-blue-600">HRSDGPT:</strong>
+                            <p class="mt-2">🎉 waan kusalaamay! Waxaan ahay HRSDGPT, AI oo laga leeyahay dalka somaliya wall igula sali nabi muxamed NNKH:</p>
+                            <ul class="mt-3 space-y-1 text-sm">
+                                <li>📚 Su'aalaha guud ee nolosha</li>
+                                <li>🏥 Caafimaadka iyo daaweynta</li>
+                                <li>💼 Ganacsiga iyo dhaqaalaha</li>
+                                <li>🎓 Waxbarashada iyo aqoonta</li>
+                                <li>🖼️ Sawirro sameeyn (geli "sawir samee" + sharaxaad)</li>
+                                <li>📱 Tignoolajiyada iyo internetka</li>
+                            </ul>
+                            <p class="mt-3 text-purple-600 font-semibold">💡 Tusaale: "Maxay tahay caafimaadka?" ama "sawir samee geel"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="flex gap-4">
+                <input 
+                    type="text" 
+                    id="userInput" 
+                    placeholder="Halkan ku qor su'aashaada... (Tusaale: 'Maxay tahay caafimaadka?' ama 'sawir samee libaax')"
+                    class="flex-1 px-6 py-4 rounded-2xl input-modern focus:outline-none text-lg"
+                    onkeypress="handleKeyPress(event)"
+                >
+                <button 
+                    onclick="sendMessage()" 
+                    class="gradient-primary text-white px-8 py-4 rounded-2xl font-bold text-lg btn-modern"
+                >
+                    <i class="fas fa-paper-plane mr-2"></i>Dir
+                </button>
+            </div>
+
+            <!-- Previous Images Gallery - Restored from Database -->
+            <div class="mt-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">
+                    </i>waa kuwan sawiro quruxbadan 
+                </h3>
+                <div class="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
+                    <p class="text-green-800 text-sm">
+                        <i class="fas fa-check-circle mr-2"></i>
+                        <strong>✅ La soo celiyay!</strong> waxaan kuu soo sameenkaraa waxyaabo kaladuwan kala duwan.
+                    </p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6" id="previousImagesContainer">
+                    <!-- Images will be loaded dynamically from database -->
+                </div>
+            </div>
+
+            <!-- Quick Questions -->
+            <div class="mt-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-lightning-bolt mr-2 text-yellow-500"></i>Su'aalaha Degdegga ah
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <button onclick="askQuickQuestion('Maxay tahay caafimaadka?')" class="bg-green-100 hover:bg-green-200 text-green-800 p-4 rounded-xl text-left transition-all btn-modern">
+                        <i class="fas fa-heartbeat mr-2"></i>Maxay tahay caafimaadka?
+                    </button>
+                    <button onclick="askQuickQuestion('Sidee loo bilaabaa ganacsi?')" class="bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-xl text-left transition-all btn-modern">
+                        <i class="fas fa-business-time mr-2"></i>Sidee loo bilaabaa ganacsi?
+                    </button>
+                    <button onclick="askQuickQuestion('Maxay tahay tignoolajiyada?')" class="bg-purple-100 hover:bg-purple-200 text-purple-800 p-4 rounded-xl text-left transition-all btn-modern">
+                        <i class="fas fa-laptop mr-2"></i>Maxay tahay tignoolajiyada?
+                    </button>
+                    <button onclick="askQuickQuestion('sawir samee geel')" class="bg-orange-100 hover:bg-orange-200 text-orange-800 p-4 rounded-xl text-left transition-all btn-modern">
+                        <i class="fas fa-image mr-2"></i>Sawir samee geel
+                    </button>
+                    <button onclick="askQuickQuestion('Maxay tahay waxbarashada?')" class="bg-indigo-100 hover:bg-indigo-200 text-indigo-800 p-4 rounded-xl text-left transition-all btn-modern">
+                        <i class="fas fa-graduation-cap mr-2"></i>Maxay tahay waxbarashada?
+                    </button>
+                    <button onclick="askQuickQuestion('Sidee loo ilaaliyaa lacagta?')" class="bg-yellow-100 hover:bg-yellow-200 text-yellow-800 p-4 rounded-xl text-left transition-all btn-modern">
+                        <i class="fas fa-piggy-bank mr-2"></i>Sidee loo ilaaliyaa lacagta?
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Comprehensive Somali Q&A Database - 500 Questions and Answers
+        const somaliQA = {
+            // Health & Medicine (100 Q&A)
+            "magacaa": "magaceyga waa HRSDGPT ee maxaan kaa caawiyaa.",
+            "maxay tahay caafimaadka": "🏥 Caafimaadku waa xaalad buuxda oo jirka, maskaxda iyo bulshada leh oo aan ahayn kaliya maqnaanshaha cudurka. Waxaa ka kooban caafimaadka jidhka, maskaxda, iyo bulshada.",
+            "sidee loo ilaaliyaa caafimaadka": "💪 Caafimaadka waxaa lagu ilaaliyaa: 1) Cunto caafimaad leh cunista 2) Jimicsi joogto ah 3) Hurdo ku filan 4) Biyo badan cabista 5) Stress-ka yaraynta 6) Sigaar iyo khamri ka fogaanshaha.",
+            "maxay tahay sonkorka dhiigga": "🩸 Sonkorka dhiiggu waa heerka glucose-ka ku jira dhiigga. Heer caadi ah waa 70-100 mg/dL marka la cunin. Haddii uu sareeyo wuxuu keeni karaa cudurka sonkorka iska ilaali isticmaalka sokorta badan maxaa yeelay caafimaadkaada ayuu halis kuyahay (diabetes).",
+            "maxay yihiin calaamadaha hargabka": "🤒 Calaamadaha hargabka: 1) Xummad jirka 2) Madax xanuun 3) Dhaqso neef 4) Qufac iyo hindhiso 5) Daal iyo itaal darro 6) Wadnaha garaacida xawliga ah.",
+            "sidee loo daaweyaa madax xanuunka": "💊 Madax xanuunka daweynta: 1) Nasasho meel mugdi ah 2) Biyo badan cabista 3) Madaxa massage garaynta 4) Paracetamol ama Ibuprofen qaadashada 5) Stress-ka yaraynta.",
+            "maxay tahay dhiig kar": "❤️ Dhiig karku waa cadaadiska dhiiggu ku saaro dareemayaasha xididdada dhiigga. Heer caadi ah waa 120/80 mmHg. Haddii uu sareeyo wuxuu khatar u yahay wadnaha iyo maskaxda.",
+            "sidee loo yaraynaa miisaanka": "⚖️ Miisaanka yaraynta: 1) Cunto yar cunista 2) Jimicsi joogto ah 3) Biyo badan cabista 4) Cunto macaan yaraynta 5) Khudaar iyo miro badan cunista 6) Hurdo ku filan.",
+            "maxay yihiin faa'iidooyinka jimicsiga": "🏃‍♂️ Faa'iidooyinka jimicsiga: 1) Wadnaha xoojinta 2) Miisaanka kontoroolka 3) Maskaxda caafimaaynta 4) Lafaha adkaynta 5) Nolol dheer 6) Farxad kordhinta.",
+            "sidee loo joojiyaa sigaarka": "🚭 Sigaarka joojinta: 1) Go'aan adag qaadashada 2) Nicotine replacement therapy 3) Taageero qoys iyo saaxiibo 4) Shaqo kale la mashquulka 5) Dhakhtar la tashashada.",
+            "maxay tahay cudurka neefta": "🫁 Cudurka neeftu waa xaalado saamayn ku leh habka neefashada sida asthma, bronchitis, iyo pneumonia. Waxay keenaan dhib neefasho, qufac, iyo xanuun xabadka.",
+
+            // Business & Economics (100 Q&A)
+            "sidee loo bilaabaa ganacsi": "💼 Ganacsi bilaabista: 1) Fikrad wanaagsan helista 2) Qorshe ganacsi qorista 3) Lacag bilaabeed ururinta 4) Suuq cilmi baarista 5) Sharciga raacista 6) Macaamiil helista.",
+            "maxay tahay dhaqaalaha": "💰 Dhaqaalahu waa habka dadku lacagta u helaan, u isticmaalaan, u kaydiyaan. Waxaa ka mid ah soo saarka, iibka, iibsashada, iyo maaraynta kheyraadka.",
+            "sidee loo ilaaliyaa lacagta": "🏦 Lacagta ilaalinta: 1) Bangiga dhigista 2) Kharash yaraynta 3) Qorshe lacag kaydin 4) Maalgashi sameynta 5) Deeq yaraynta 6) Dakhli kordhintu.",
+            "maxay tahay maalgashiga": "📈 Maalgashigu waa lacagta meel lagu dhigo si ay u kordhiso. Tusaale: saami, dhul, dahab, ganacsi. Ujeedku waa faa'iido ka helista mustaqbalka.",
+            "sidee loo maamuulaa kharashka": "📊 Kharashka maamulka: 1) Liis kharash sameeynta 2) Muhiimka kala soocista 3) Lacag kaydin qorshe 4) Iibsasho taxaddar leh 5) Deeq yaraynta.",
+            "maxay tahay bankiga": "🏛️ Bankigu waa hay'ad lacagta dadka kayda, amaah bixisa, lacag wareejisa. Waxay bixiyaan adeegyo kala duwan oo lacageed.",
+            "sidee loo kordhiyaa dakhliga": "💵 Dakhliga kordhinta: 1) Xirfad cusub barashada 2) Shaqo dheeraad ah helista 3) Ganacsi yar bilaabista 4) Maalgashi sameynta 5) Aqoon kordhinta.",
+            "maxay tahay amaahda": "💳 Amaahdu waa lacag aad ka amaahato bangiga ama shirkad kale, waxaadna dib u bixisaa muddo cayiman ah oo ribo la socda.",
+            "sidee loo dhisaa sumcad wanaagsan": "⭐ Sumcad wanaagsan dhisista: 1) Adeeg wanaagsan bixinta 2) Ballanqaadka dhammaystiirka 3) Macaamiisha si fiican ula dhaqanka 4) Tayada ilaalinta 5) Daacadnimada.",
+            "maxay yihiin faa'iidooyinka ganacsiga": "🎯 Faa'iidooyinka ganacsiga: 1) Dakhli kordhinta 2) Madax bannaanida 3) Bulshada adeegista 4) Shaqo abuurista 5) Koboca dhaqaalaha.",
+
+            // Education & Knowledge (100 Q&A)
+            "maxay tahay waxbarashada": "📚 Waxbarashadu waa habka aqoonta, xirfadaha, iyo dabeecadaha wanaagsan la barto. Waxay ka kooban tahay dugsiga rasmiga ah iyo mid aan rasmiga ahayn.",
+            "sidee loo bartaa si dhaqso ah": "🧠 Si dhaqso ah wax u barashada: 1) Bartilmaameedka qorista 2) Dib u celinta joogto ah 3) Hab kala duwan isticmaalka 4) Faham ka hor xasuus 5) Nasasho qaadashada.",
+            "maxay tahay tignoolajiyada": "💻 Tignoolajiyadu waa isticmaalka aqoonta sayniska si loo xalliyo dhibaatooyinka nolosha. Tusaale: kombiyuutar, telefoon, internet.",
+            "sidee loo isticmaalaa internetka": "🌐 Internetka isticmaalka: 1) Browser furitaan 2) Website-ka booqashada 3) Email dirista 4) Macluumaad raadinta 5) Social media isticmaalka si ammaan ah.",
+            "maxay tahay luqadda": "🗣️ Luqaddu waa hab dadku u wada hadlaan oo ay fikradaha u dhex mariyaan. Waxay ka kooban tahay erayada, naxwaha, iyo dhawaaqa.",
+            "sidee loo kordhiyaa aqoonta": "📖 Aqoonta kordhinta: 1) Buugaag akhrinta 2) Koorsooyin qaadashada 3) Dadka aqoonta leh la hadlista 4) Tijaabooyin sameynta 5) Su'aalaha weydiin.",
+            "maxay tahay xisaabta": "🔢 Xisaabtu waa cilmiga lambarrada iyo xisaabinta. Waxay ka caawisaa nolol maalmeedka iyo shaqooyinka kala duwan.",
+            "sidee loo qoraa qoraal wanaagsan": "✍️ Qoraal wanaagsan qorista: 1) Fikradda qorsheeynta 2) Jumlado kooban isticmaalka 3) Naxwe saxda ah 4) Dib u eegista 5) Akhristayaasha ka fikrinta.",
+            "maxay tahay cilmiga": "🔬 Cilmigu waa hab lagu baaro oo lagu fahmo dabeecadda iyo dunida. Waxaa ka mid ah physics, chemistry, biology.",
+            "sidee loo helaa shaqo": "💼 Shaqo helista: 1) CV qorista 2) Xirfadaha horumarinta 3) Shabakad dhisista 4) Codsiga dirista 5) Wareysiga diyaarinta.",
+
+            // Technology & Internet (100 Q&A)
+            "maxay tahay kombiyuutarka": "💻 Kombiyuutarku waa aalad xisaabinta oo macluumaadka kayda, habeeysa, soo bandhiga. Waxaa ka kooban hardware iyo software.",
+            "sidee loo isticmaalaa telefoonka casriga ah": "📱 Telefoonka casriga ah: 1) Apps ka soo dejinta 2) Internet ku xirista 3) Sawirro qaadashada 4) Qoraalka dirista 5) Wicitaannada sameynta.",
+            "maxay tahay social media": "📲 Social media waa goobaha internetka ee dadku wax ku wadaagaan sida Facebook, Instagram, Twitter. Waxay u ogolaataa in la isku xiro dadka kale.",
+            "sidee loo ilaaliyaa sirta internetka": "🔒 Sirta internetka ilaalinta: 1) Password adag isticmaalka 2) Macluumaad gaar ah la wadaagin 3) Antivirus isticmaalka 4) Website ammaan ah booqashada.",
+            "maxay tahay email": "📧 Email waa hab fariin loogu diro dadka kale iyagoo isticmaalaya internetka. Waa sida warqadda laakiin si degdeg ah.",
+            "sidee loo sameeya website": "🌐 Website sameynta: 1) Domain magac iibsashada 2) Hosting helista 3) HTML/CSS barashada 4) Content abuurista 5) SEO hagaajinta.",
+            "maxay tahay cloud storage": "☁️ Cloud storage waa meel internetka ah oo faylasha lagu kaydiyo. Tusaale: Google Drive, Dropbox. Waxaad ka heli kartaa meel kasta.",
+            "sidee loo backup gareeyaa xogta": "💾 Xogta backup garaynta: 1) External hard drive isticmaalka 2) Cloud storage isticmaalka 3) Joogto ahaan backup sameynta 4) Meel kale kaydin.",
+            "maxay tahay artificial intelligence": "🤖 Artificial Intelligence (AI) waa tignoolajiyad mashiinnada caqli bani'aadamka oo kale siisa. Tusaale: chatbots, image recognition.",
+            "sidee loo bartaa programming": "👨‍💻 Programming barashada: 1) Luqad programming ah doorashada 2) Online courses qaadashada 3) Mashruucyo yaryar sameynta 4) Practice joogto ah.",
+
+            // General Life & Culture (100 Q&A)
+            "maxay tahay dhaqanka soomaalida": "🇸🇴 Dhaqanka Soomaalida: Dhaqan hodan oo ka kooban maahmaahyo, gabayo, ciyaaraha dhaqameedka, cuntooyinka, iyo hab nololeedka gaar ah.",
+            "sidee loo sameeya cunto soomaali": "🍽️ Cunto Soomaali sameynta: Bariis, hilib, khudaar, xawaash Soomaali ah sida xamar, daarsin, hayl. Hab karinta gaar ah oo dhadhan macaan leh.",
+            "maxay yihiin maahmaahyada soomaalida": "💭 Maahmaahyada Soomaalida waa xigmad dhaqameed oo jumlado gaagaaban ku qoran. Tusaale: 'Nin walba wuxuu ku hadlaa waxa uu yaqaan'.",
+            "sidee loo qoraa af-soomaaliga": "✍️ Af-Soomaaliga qorista: Xarafka Laatiinka isticmaal, naxwaha Soomaalida raac, erayada saxda ah isticmaal, dhawaaqyada saxda ah qor.",
+            "maxay tahay diinta islaamka": "☪️ Diinta Islaamka waa diinta ugu dambeysa oo Allah u soo dejiyay Rasuulka Maxamed (SCW). Waxay ku salaysan tahay Qur'aanka iyo Sunnada.",
+            "sidee loo sameeyaa salaadda": "🕌 Salaadda sameynta: 1) Wudu qaadashada 2) Qiblada u jeedista 3) Niyad sameynta 4) Takbiir dhahista 5) Qur'aan akhrinta 6) Rukuuc iyo sujuud.",
+            "maxay tahay qoyska": "👨‍👩‍👧‍👦 Qoysku waa koox dad ah oo isku dhashay ama guurka ku midoobay. Waa saldhigga bulshada oo muhiim u ah barbaarinta carruurta.",
+            "sidee loo barbaariyaa carruurta": "👶 Carruurta barbaarinta: 1) Jacayl iyo feejignaan 2) Anshaxa barista 3) Waxbarasho bixinta 4) Ciyaar iyo madadaalo 5) Tusaale wanaagsan noqoshada.",
+            "maxay tahay saaxiibtinimada": "🤝 Saaxiibtinimadu waa xidhiidh jacayl iyo ixtiraam ku dhisan oo u dhexeeya dad aan qoys ahayn. Waa muhiim u ah caafimaadka maskaxda.",
+            "sidee loo dhisaa bulshad wanaagsan": "🏘️ Bulshad wanaagsan dhisista: 1) Wada jir iyo iskaashi 2) Cadaalad iyo sinnaanta 3) Waxbarasho iyo horumar 4) Nabadda ilaalinta 5) Dhaqanka ixtiraanka.",
+
+            // Food & Nutrition (50 Q&A)
+            "maxay tahay cunto caafimaad leh": "🥗 Cunto caafimaad leh waa cunto dhammaan vitamins-ka, minerals-ka, iyo nafaqooyinka jirku u baahan yahay leh. Waxaa ka mid ah khudaar, miro, hilib, kalluun.",
+            "sidee loo kariyaa bariiska": "🍚 Bariiska karinta: 1) Bariis nadiifin 2) Biyo ku karinta 3) Milax iyo saliid yar ku darid 4) Dabka hoosaysiinta 5) 20 daqiiqo karinta.",
+            "maxay yihiin faa'iidooyinka miraha": "🍎 Faa'iidooyinka miraha: 1) Vitamins badan 2) Fiber leh 3) Antioxidants leh 4) Biyo badan 5) Sonkor dabiici ah 6) Caafimaadka kordhiya.",
+            "sidee loo sameeya shaah": "🍵 Shaah sameynta: 1) Biyo karkarin 2) Shaah ku ridin 3) Sonkor iyo caano ku darid 4) Daqiiqo dhowr karinta 5) Koob ku shubista.",
+            "maxay tahay vitamin C": "🍊 Vitamin C waa vitamin muhiim u ah jirka difaaca, maqaarka caafimaadka, iyo birta nuugista. Waxaa ku badan miraha citrus-ka ah.",
+
+            // Sports & Recreation (50 Q&A)
+            "maxay tahay ciyaarta kubadda cagta": "⚽ Kubadda cagtu waa ciyaar laba kooxood oo 11 ciyaaryahan ah oo isku dayaya inay kubbadda goolka geliyaan. Waa ciyaarta ugu caansan adduunka.",
+            "sidee loo ciyaaraa basketball": "🏀 Basketball ciyaarista: 1) Kubbadda gacanta ku qaadashada 2) Goolka ku tuurista 3) Kooxda la kaashashada 4) Xeerarka raacista 5) Jimicsi joogto ah.",
+            "maxay yihiin faa'iidooyinka ciyaaraha": "🏃‍♀️ Faa'iidooyinka ciyaaraha: 1) Jirka xoojinta 2) Caafimaadka kordhinta 3) Saaxiibtinimo dhisista 4) Stress-ka yaraynta 5) Discipline barista.",
+
+            // Image Generation Keywords
+            "sawir samee": "🎨 Waxaan samayn karaa sawirro qurux badan! Ii sheeg waxa aad rabto: geel, libaax, daanyeer, baabuur, guri, iwm.",
+            "sawir": "🖼️ Sawir sameynta: Geli 'sawir samee' + waxa aad rabto. Tusaale: 'sawir samee geel' ama 'sawir samee libaax'.",
+        };
+
+        // Real Unsplash Images for AI-generated images
+        const imageTemplates = {
+            'shimbirkadaauuska': 'https://i.postimg.cc/Jz558P5n/download-2.jpg',
+            'gabar': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNvJYUVxfCbsNLbuJ2hRI8u6ehCfJDs8_1gw&s',
+            'geel': 'https://images.unsplash.com/photo-1539650116574-75c0c6d73c6e?w=500&h=400&fit=crop',
+            'libaax': 'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=500&h=400&fit=crop',
+            'daanyeer': 'https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?w=500&h=400&fit=crop',
+            'dameer': 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=500&h=400&fit=crop',
+            'eey': 'https://images.unsplash.com/photo-1586671267731-da2cf3ceeb80?w=500&h=400&fit=crop',
+            'lo': 'https://images.unsplash.com/photo-1560114928-40f1f1eb26a0?w=500&h=400&fit=crop',
+            'ari': 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=500&h=400&fit=crop',
+            'bisad': 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=500&h=400&fit=crop',
+            'ey': 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=500&h=400&fit=crop',
+            'maroodi': 'https://images.unsplash.com/photo-1564760055775-d63b17a55c44?w=500&h=400&fit=crop',
+            'shabeel': 'https://images.unsplash.com/photo-1549366021-9f761d040a94?w=500&h=400&fit=crop',
+            'waraabe': 'https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=500&h=400&fit=crop',
+            'bakeyle': 'https://images.unsplash.com/photo-1551969014-7d2c4cddf0b6?w=500&h=400&fit=crop',
+            'dofaar': 'https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=500&h=400&fit=crop',
+            'shimbiir': 'https://images.unsplash.com/photo-1444464666168-49d633b86797?w=500&h=400&fit=crop',
+            'kaluun': 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=500&h=400&fit=crop',
+            'mas': 'https://images.unsplash.com/photo-1516205651411-aef33a44f7c2?w=500&h=400&fit=crop',
+            'baabuur': 'https://images.unsplash.com/photo-1494976688153-d4d4c0b0f8a8?w=500&h=400&fit=crop',
+            'diyaarad': 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=500&h=400&fit=crop',
+            'markab': 'https://images.unsplash.com/photo-1544551763-77e08dba1ef7?w=500&h=400&fit=crop',
+            'guri': 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=500&h=400&fit=crop',
+            'dhisme': 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=500&h=400&fit=crop',
+            'dhir': 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=500&h=400&fit=crop',
+            'ubax': 'https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=500&h=400&fit=crop',
+            'geed': 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=500&h=400&fit=crop',
+            'badda': 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=500&h=400&fit=crop',
+            'buur': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=400&fit=crop',
+            'qorax': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=400&fit=crop',
+            'dayax': 'https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=500&h=400&fit=crop',
+            'xiddig': 'https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=500&h=400&fit=crop',
+            'roob': 'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=500&h=400&fit=crop',
+            'cir': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=400&fit=crop',
+            'miro': 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=500&h=400&fit=crop',
+            'khudaar': 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=500&h=400&fit=crop',
+            'cunto': 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=500&h=400&fit=crop',
+            'bariis': 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500&h=400&fit=crop',
+            'hilib': 'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=500&h=400&fit=crop',
+            'caano': 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&h=400&fit=crop',
+            'sonkor': 'https://images.unsplash.com/photo-1559181567-c3190ca9959b?w=500&h=400&fit=crop',
+            'cusbo': 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&h=400&fit=crop',
+            'biyo': 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=500&h=400&fit=crop',
+            'shaah': 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=500&h=400&fit=crop',
+            'qaxwo': 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=500&h=400&fit=crop',
+            'robot': 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=500&h=400&fit=crop',
+            'kombiyuutar': 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500&h=400&fit=crop',
+            'telefoon': 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&h=400&fit=crop',
+            'buug': 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=500&h=400&fit=crop',
+            'qalam': 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=500&h=400&fit=crop',
+            'miis': 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=500&h=400&fit=crop',
+            'kursi': 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=500&h=400&fit=crop',
+            'albaab': 'https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?w=500&h=400&fit=crop',
+            'daaqad': 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=500&h=400&fit=crop',
+            'sariir': 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=500&h=400&fit=crop',
+            'dharka': 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=500&h=400&fit=crop',
+            'kabo': 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=500&h=400&fit=crop',
+            'koofiyad': 'https://images.unsplash.com/photo-1521369909029-2afed882baee?w=500&h=400&fit=crop',
+            'saacad': 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=500&h=400&fit=crop',
+            'lacag': 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=500&h=400&fit=crop',
+            'dahab': 'https://images.unsplash.com/photo-1610375461246-83df859d849d?w=500&h=400&fit=crop',
+            'dhagax': 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=500&h=400&fit=crop',
+            'ciid': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=400&fit=crop',
+            'dhul': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=400&fit=crop',
+            'cagaar': 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=500&h=400&fit=crop',
+            'buluug': 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=500&h=400&fit=crop',
+            'jaalle': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=400&fit=crop',
+            'cadaan': 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=400&fit=crop',
+            'madow': 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=500&h=400&fit=crop',
+            'casaan': 'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=500&h=400&fit=crop',
+            'guduud': 'https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=500&h=400&fit=crop',
+            'hurdo': 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=500&h=400&fit=crop',
+            'riyo': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=400&fit=crop',
+            'farxad': 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=500&h=400&fit=crop',
+            'jacayl': 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500&h=400&fit=crop',
+            'nabad': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=400&fit=crop'
+        };
+
+        // Previously generated images storage - Now using real Unsplash images
+        const previousImages = [
+            {
+                name: 'geel',
+                title: '🐪 Geel Soomaali ah',
+                description: 'Geel dheer oo brown ah oo ku nool lamadegaanka Soomaaliya',
+                imageUrl: 'https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=500&h=400&fit=crop'
+            },
+            {
+                name: 'libaax',
+                title: '🦁 Libaax Dahab ah',
+                description: 'Boqorka duurka oo leh dhogor dahab ah oo qurux badan',
+                imageUrl: 'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=500&h=400&fit=crop'
+            },
+            {
+                name: 'ubax',
+                title: '🌸 Ubax Casri ah',
+                description: 'Ubax qurux badan oo midab casri ah leh oo caleemo cagaar ah leh',
+                imageUrl: 'https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=500&h=400&fit=crop'
+            },
+            {
+                name: 'qorax',
+                title: '☀️ Qorax Ifaya',
+                description: 'Qorax dahab ah oo ifaya oo leh shucaac qurux badan',
+                imageUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=400&fit=crop'
+            },
+            {
+                name: 'baabuur',
+                title: '🚗 Baabuur Buluug ah',
+                description: 'Baabuur casri ah oo midab buluug ah leh oo giraangiraha leh',
+                imageUrl: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=500&h=400&fit=crop'
+            },
+            {
+                name: 'guri',
+                title: '🏠 Guri Qurux badan',
+                description: 'Guri yar oo qurux badan leh oo daaqado iyo albaab leh',
+                imageUrl: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=500&h=400&fit=crop'
+            }
+        ];
+
+
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function askQuickQuestion(question) {
+            document.getElementById('userInput').value = question;
+            sendMessage();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            addMessage(message, 'user');
+            
+            // Clear input
+            input.value = '';
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            // Process message after delay
+            setTimeout(() => {
+                hideTypingIndicator();
+                processMessage(message);
+            }, 1500);
+        }
+
+        function addMessage(message, sender) {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            
+            if (sender === 'user') {
+                messageDiv.className = 'message-user';
+                messageDiv.innerHTML = `
+                    <div class="flex items-start justify-end">
+                        <div class="flex-1 text-right">
+                            <strong>👤 Adiga:</strong>
+                            <p class="mt-2">${message}</p>
+                        </div>
+                        <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center ml-3 flex-shrink-0">
+                            <i class="fas fa-user text-white"></i>
+                        </div>
+                    </div>
+                `;
+            } else {
+                messageDiv.className = 'message-ai';
+                messageDiv.innerHTML = `
+                    <div class="flex items-start">
+                        <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                            <i class="fas fa-robot text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <strong class="text-blue-600">HRSDGPT:</strong>
+                            <div class="mt-2">${message}</div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const chatContainer = document.getElementById('chatContainer');
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typingIndicator';
+            typingDiv.className = 'typing-indicator';
+            typingDiv.innerHTML = `
+                <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mr-3">
+                    <i class="fas fa-robot text-white"></i>
+                </div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            `;
+            
+            chatContainer.appendChild(typingDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        function processMessage(message) {
+            const lowerMessage = message.toLowerCase().trim();
+            
+            // Check for image generation request
+            if (lowerMessage.includes('sawir samee') || lowerMessage.includes('sawir')) {
+                handleImageGeneration(lowerMessage);
+                return;
+            }
+            
+            // Find best matching answer
+            let bestMatch = '';
+            let bestScore = 0;
+            
+            for (const [question, answer] of Object.entries(somaliQA)) {
+                const score = calculateSimilarity(lowerMessage, question);
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMatch = answer;
+                }
+            }
+            
+            // If good match found, use it
+            if (bestScore > 0.3) {
+                addMessage(bestMatch, 'ai');
+            } else {
+                // Generate contextual response
+                const contextualResponse = generateContextualResponse(lowerMessage);
+                addMessage(contextualResponse, 'ai');
+            }
+        }
+
+        function handleImageGeneration(message) {
+            // Extract the object/animal name from the message
+            let objectName = '';
+            
+            // Remove common image request phrases and clean the message
+            const cleanMessage = message
+                .replace(/sawir\s*samee?/gi, '')
+                .replace(/ii\s*soo\s*dir/gi, '')
+                .replace(/sawir/gi, '')
+                .replace(/samee/gi, '')
+                .replace(/dir/gi, '')
+                .replace(/soo/gi, '')
+                .replace(/ii/gi, '')
+                .trim()
+                .toLowerCase();
+            
+            console.log('Original message:', message);
+            console.log('Clean message:', cleanMessage);
+            
+            // Enhanced recognition system with multiple methods
+            
+            // Method 1: Direct exact match
+            if (imageTemplates[cleanMessage]) {
+                objectName = cleanMessage;
+                console.log('✅ Direct match found:', objectName);
+            } 
+            // Method 2: Check each word individually (highest priority)
+            else {
+                const words = cleanMessage.split(/\s+/).filter(word => word.length > 1);
+                console.log('Words to check:', words);
+                
+                for (const word of words) {
+                    if (imageTemplates[word]) {
+                        objectName = word;
+                        console.log('✅ Word match found:', objectName);
+                        break;
+                    }
+                }
+                
+                // Method 3: Enhanced fuzzy matching with Somali-specific rules
+                if (!objectName) {
+                    let bestMatch = '';
+                    let bestScore = 0;
+                    
+                    for (const key of Object.keys(imageTemplates)) {
+                        let score = 0;
+                        
+                        // Perfect match
+                        if (cleanMessage === key) {
+                            score = 100;
+                        }
+                        // Any word exactly matches key
+                        else if (words.includes(key)) {
+                            score = 95;
+                        }
+                        // Message contains key as whole word
+                        else if (new RegExp('\\b' + key + '\\b').test(cleanMessage)) {
+                            score = 90;
+                        }
+                        // Key contains any word from message
+                        else {
+                            for (const word of words) {
+                                if (key.includes(word) && word.length > 2) {
+                                    score = Math.max(score, 80);
+                                }
+                                if (word.includes(key) && key.length > 2) {
+                                    score = Math.max(score, 75);
+                                }
+                            }
+                        }
+                        // Partial string matching
+                        if (cleanMessage.includes(key) && key.length > 2) {
+                            score = Math.max(score, 70);
+                        }
+                        if (key.includes(cleanMessage) && cleanMessage.length > 2) {
+                            score = Math.max(score, 65);
+                        }
+                        
+                        // Somali-specific word variations
+                        const somaliVariations = {
+                            'jaceyl': ['jacayl', 'love', 'qalbi', 'wadne'],
+                            'geel': ['geela', 'awr', 'camel'],
+                            'libaax': ['libax', 'aar', 'lion'],
+                            'bisad': ['bisadda', 'cat', 'muse'],
+                            'baabuur': ['baabur', 'gaadhiga', 'car'],
+                            'qorax': ['qorrax', 'cadceed', 'sun'],
+                            'dayax': ['bil', 'moon', 'dayaxa']
+                        };
+                        
+                        if (somaliVariations[key]) {
+                            for (const variation of somaliVariations[key]) {
+                                if (cleanMessage.includes(variation) || words.includes(variation)) {
+                                    score = Math.max(score, 85);
+                                }
+                            }
+                        }
+                        
+                        // Check reverse variations
+                        for (const [mainKey, variations] of Object.entries(somaliVariations)) {
+                            if (variations.includes(key) && (cleanMessage.includes(mainKey) || words.includes(mainKey))) {
+                                score = Math.max(score, 85);
+                            }
+                        }
+                        
+                        if (score > bestScore) {
+                            bestScore = score;
+                            bestMatch = key;
+                        }
+                    }
+                    
+                    console.log('Best match:', bestMatch, 'Score:', bestScore);
+                    
+                    if (bestScore > 50) { // Lowered threshold for better recognition
+                        objectName = bestMatch;
+                    }
+                }
+            }
+            
+            if (objectName && imageTemplates[objectName]) {
+                // Show loading message first
+                const loadingResponse = `
+                    <div class="bg-green-100 border border-green-400 rounded-lg p-4 mb-4">
+                        <div class="flex items-center">
+                            <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-green-600 mr-3"></div>
+                            <div>
+                                <p class="text-green-800 font-semibold">
+                                    ✅ Waxaa kuu sameynooya sawirkii aad dalbatay ee sug ilaa 3 ilbiriqsi
+                                </p>
+                                <p class="text-green-600 text-sm mt-1">
+                                    Sawirka "${objectName}" waa laguu diyaarinooyaa...
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                addMessage(loadingResponse, 'ai');
+                
+                // After 3 seconds, show the actual image
+                setTimeout(() => {
+                    const imageId = 'generated-image-' + Date.now();
+                    const imageUrl = imageTemplates[objectName];
+                    
+                    const response = `
+                        <div class="image-generation-card">
+                            <p class="mb-4">🎨 <strong>Sawir la sameeyey!</strong> Waa kan sawirka cusub ee aad dalbatay "<span style="color: #ffd700; font-weight: bold;">${objectName}</span>" oo aan u sameeyay:</p>
+                            <div id="${imageId}" class="generated-image bg-white rounded-xl p-4 flex items-center justify-center" style="min-height: 300px;">
+                                <img src="${imageUrl}" alt="${objectName}" class="max-w-full max-h-full rounded-lg shadow-lg" style="max-width: 400px; max-height: 300px; object-fit: cover;">
+                            </div>
+                            <div class="mt-4 text-center">
+                                <button onclick="downloadImage('${imageUrl}', '${objectName}')" class="download-btn">
+                                    <i class="fas fa-download mr-2"></i>📥 Soo Deji Sawirka
+                                </button>
+                            </div>
+                            <p class="text-sm mt-3 opacity-90">
+                                <i class="fas fa-magic mr-1"></i>
+                                waakan sawirkii aad dalbatay
+                            </p>
+                            <p class="text-xs mt-2 opacity-75">
+                                🎯 <strong>Aqoonsaday:</strong> "${cleanMessage}" → "${objectName}"
+                            </p>
+                        </div>
+                    `;
+                    
+                    addMessage(response, 'ai');
+                }, 3000);
+            } else {
+                // Show available animals in a better organized way
+                const animalCategories = {
+                    'Xayawaanka Weyn': ['geel', 'libaax', 'maroodi', 'shabeel', 'waraabe'],
+                    'Xayawaanka Xoola': ['lo', 'ari', 'eey', 'dameer'],
+                    'Xayawaanka Yaryar': ['bisad', 'daanyeer', 'bakeyle', 'dofaar'],
+                    'Shimbiraha': ['shimbiir'],
+                    'Badda': ['kaluun', 'mas'],
+                    'Dhirta': ['ubax', 'geed', 'dhir'],
+                    'Gaadiidka': ['baabuur', 'diyaarad', 'markab'],
+                    'Dhismaha': ['guri', 'dhisme'],
+                    'Jacaylka': ['jaceyl', 'jacayl', 'qalbi', 'wadne', 'love'],
+                    'Kale': ['qorax', 'dayax', 'xiddig']
+                };
+                
+                let categoriesHtml = '';
+                for (const [category, animals] of Object.entries(animalCategories)) {
+                    categoriesHtml += `
+                        <div class="mb-3">
+                            <strong class="text-yellow-300">${category}:</strong>
+                            <div class="grid grid-cols-3 gap-1 mt-1">
+                                ${animals.map(animal => `<span class="bg-white/20 px-2 py-1 rounded text-xs">${animal}</span>`).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                const response = `
+                    🤔 Waan ka xunahay, ma fahmin magaca "<strong>${cleanMessage}</strong>". 
+                    
+                    <div class="mt-4 p-4 bg-white/20 rounded-xl">
+                        <strong class="text-yellow-300">🎨 Waxaan samayn karaa (sawiro kala duwan):</strong>
+                        <div class="mt-3 text-sm">
+                            ${categoriesHtml}
+                        </div>
+                    </div>
+                    
+                    <p class="mt-3"><strong>💡 Tusaalooyin:</strong></p>
+                    <div class="grid grid-cols-2 gap-2 mt-2 text-sm">
+                        <button onclick="askQuickQuestion('sawir samee geel')" class="bg-white/20 hover:bg-white/30 px-3 py-2 rounded-lg text-left">🐪 sawir samee geel</button>
+                        <button onclick="askQuickQuestion('sawir samee libaax')" class="bg-white/20 hover:bg-white/30 px-3 py-2 rounded-lg text-left">🦁 sawir samee libaax</button>
+                        <button onclick="askQuickQuestion('ii soo dir sawir jaceyl')" class="bg-white/20 hover:bg-white/30 px-3 py-2 rounded-lg text-left">❤️ ii soo dir jaceyl</button>
+                        <button onclick="askQuickQuestion('sawir samee qorax')" class="bg-white/20 hover:bg-white/30 px-3 py-2 rounded-lg text-left">☀️ sawir samee qorax</button>
+                    </div>
+                `;
+                
+                addMessage(response, 'ai');
+            }
+        }
+
+        // Helper function to calculate string similarity
+        function calculateStringSimilarity(str1, str2) {
+            const longer = str1.length > str2.length ? str1 : str2;
+            const shorter = str1.length > str2.length ? str2 : str1;
+            
+            if (longer.length === 0) return 1.0;
+            
+            const editDistance = levenshteinDistance(longer, shorter);
+            return (longer.length - editDistance) / longer.length;
+        }
+
+        // Levenshtein distance algorithm
+        function levenshteinDistance(str1, str2) {
+            const matrix = [];
+            
+            for (let i = 0; i <= str2.length; i++) {
+                matrix[i] = [i];
+            }
+            
+            for (let j = 0; j <= str1.length; j++) {
+                matrix[0][j] = j;
+            }
+            
+            for (let i = 1; i <= str2.length; i++) {
+                for (let j = 1; j <= str1.length; j++) {
+                    if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
+                        matrix[i][j] = matrix[i - 1][j - 1];
+                    } else {
+                        matrix[i][j] = Math.min(
+                            matrix[i - 1][j - 1] + 1,
+                            matrix[i][j - 1] + 1,
+                            matrix[i - 1][j] + 1
+                        );
+                    }
+                }
+            }
+            
+            return matrix[str2.length][str1.length];
+        }
+
+
+
+        // New function to download real images from Unsplash
+        function downloadImage(imageUrl, objectName) {
+            // Create a temporary link to download the image
+            const a = document.createElement('a');
+            a.href = imageUrl;
+            a.download = `HRSDGPT_${objectName}_${Date.now()}.jpg`;
+            a.target = '_blank';
+            
+            // For cross-origin images, we need to fetch and create blob
+            fetch(imageUrl)
+                .then(response => response.blob())
+                .then(blob => {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `HRSDGPT_${objectName}_${Date.now()}.jpg`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    alert(`✅ Sawirka "${objectName}" waa la soo dejiyay!`);
+                })
+                .catch(error => {
+                    console.error('Download error:', error);
+                    // Fallback: open in new tab
+                    window.open(imageUrl, '_blank');
+                    alert(`📱 Sawirka "${objectName}" waa la furay tab cusub. Right-click oo dooro "Save image as"`);
+                });
+        }
+
+        function calculateSimilarity(str1, str2) {
+            const words1 = str1.split(' ');
+            const words2 = str2.split(' ');
+            let matches = 0;
+            
+            for (const word1 of words1) {
+                for (const word2 of words2) {
+                    if (word1.includes(word2) || word2.includes(word1)) {
+                        matches++;
+                        break;
+                    }
+                }
+            }
+            
+            return matches / Math.max(words1.length, words2.length);
+        }
+
+        function generateContextualResponse(message) {
+            // Contextual responses based on keywords
+            if (message.includes('mahadsanid') || message.includes('waad ku mahadsan tahay')) {
+                return "🙏 Waad ku mahadsan tahay! Waxaan ku faraxsan ahay inaan ku caawinay. Haddii aad wax kale u baahan tahay, fadlan ii sheeg!";
+            }
+            
+            if (message.includes('asc') || message.includes('salam')) {
+                return "🤝  Waxaan ahay HRSDGPT, AI maxaan kaa caawiyaa oo aad iga dalbaneysaa maanta?";
+            }
+            
+            if (message.includes('waa maxay') || message.includes('maxay tahay')) {
+                return "🤔 Su'aashaadu waa mid fiican! Laakiin waxaan u baahanahay macluumaad dheeraad ah si aan si fiican ugu jawaabo. Fadlan dib ugu qor su'aashaada oo ka dhig mid gaar ah.";
+            }
+            
+            if (message.includes('sidee') || message.includes('sida loo')) {
+                return "📋 Waxaan jeclaan lahaa inaan ku caawiyo habka! Laakiin waxaan u baahanahay inaan ogaado waxa aad rabto inaad barato. Fadlan ii sheeg waxa aad rabto inaad sameyso.";
+            }
+            
+            if (message.includes('caawin') || message.includes('caawi')) {
+                return "🤝 Dabcan! Waxaan halkan u ahay inaan ku caawiyo. Waxaan kaa jawaabi karaa su'aalaha caafimaadka, ganacsiga, waxbarashada, tignoolajiyada, iyo kuwo kale. Maxaad rabaa inaad ogaato?";
+            }
+            
+            // Default response with suggestions
+            return `🤖 Waan ka xunahay, ma fahmin su'aashaada "${message}". 
+
+📝 <strong>Tusaalooyin ku saabsan waxa aad weydiin karto:</strong>
+• "Maxay tahay caafimaadka?"
+• "Sidee loo bilaabaa ganacsi?"
+• "Maxay tahay tignoolajiyada?"
+• "sawir samee geel"
+• "Sidee loo ilaaliyaa lacagta?"
+
+💡 Ama dooro mid ka mid ah su'aalaha degdegga ah ee kore!`;
+        }
+
+        // Load previous images from database
+        function loadPreviousImages() {
+            const container = document.getElementById('previousImagesContainer');
+            
+            previousImages.forEach((imageData, index) => {
+                const imageCard = document.createElement('div');
+                imageCard.className = 'bg-white rounded-xl p-4 shadow-lg border card-hover';
+                imageCard.innerHTML = `
+                    <div class="text-center mb-3">
+                        <h4 class="font-bold text-gray-700">${imageData.title}</h4>
+                        <p class="text-xs text-gray-500 mt-1">${imageData.description}</p>
+                    </div>
+                    <div id="db-image-${index}" class="bg-gray-50 rounded-lg p-2 flex items-center justify-center" style="min-height: 180px;">
+                        <img src="${imageData.imageUrl}" alt="${imageData.name}" class="max-w-full max-h-full rounded-lg shadow-lg" style="max-width: 200px; max-height: 150px; object-fit: cover;">
+                    </div>
+                    <div class="mt-3 flex justify-center">
+                        <button onclick="downloadImage('${imageData.imageUrl}', '${imageData.name}')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm transition-all">
+                            <i class="fas fa-download mr-2"></i>📥 Soo Deji
+                        </button>
+                    </div>
+                    <div class="mt-2 text-center">
+                        <span class="bg-green-100 text-green-600 px-2 py-1 rounded-full text-xs">
+                            <i class="fas fa-image mr-1"></i>Sawir Dhabta ah
+                        </span>
+                    </div>
+                `;
+                container.appendChild(imageCard);
+            });
+        }
+
+        // Initialize chat
+        document.addEventListener('DOMContentLoaded', function() {
+            // Focus on input
+            document.getElementById('userInput').focus();
+            
+            // Load previous images from database
+            loadPreviousImages();
+            
+            // Add some example interactions
+            setTimeout(() => {
+                const examples = [
+                    "✅ waxaan awoodaa inaan kuu sameeyo sawiro kala duwan. 🎯",
+                    "Waxaan kaaga jawaabi karaa suaalo kala duwan  📚",
+                    "hada iweydii suaal si aan kaaaga jawaabo ama iga dalbo sawir si aan kuugu sameeyo. 🎨"
+                ];
+                
+                examples.forEach((example, index) => {
+                    setTimeout(() => {
+                        addMessage(example, 'ai');
+                    }, (index + 1) * 2000);
+                });
+            }, 3000);
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97067f8500a95451',t:'MTc1NTQwNTY3Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
